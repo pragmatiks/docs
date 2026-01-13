@@ -24,20 +24,20 @@ This opens your browser for authentication.
 
 ## Step 3: Create a Resource
 
-Create a file called `warehouse.yaml`:
+Create a file called `bucket.yaml`:
 
 ```yaml
-provider: snowflake
-resource: warehouse
-name: my-warehouse
+provider: gcp
+resource: storage
+name: my-bucket
 config:
-  size: SMALL
+  location: EU
 ```
 
 ## Step 4: Apply the Resource
 
 ```bash
-pragma resources apply warehouse.yaml
+pragma resources apply bucket.yaml
 ```
 
 ## Step 5: Check Status

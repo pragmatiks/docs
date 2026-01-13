@@ -19,16 +19,16 @@ from pragma_sdk import PragmaClient
 client = PragmaClient()
 
 # List resources
-resources = client.list_resources(provider="snowflake")
+resources = client.list_resources(provider="gcp")
 for resource in resources:
     print(f"{resource['name']}: {resource['lifecycle_state']}")
 
 # Apply a resource
 result = client.apply_resource({
-    "provider": "snowflake",
-    "resource": "warehouse",
-    "name": "my-warehouse",
-    "config": {"size": "SMALL"}
+    "provider": "gcp",
+    "resource": "storage",
+    "name": "my-bucket",
+    "config": {"location": "EU"}
 })
 ```
 

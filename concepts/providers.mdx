@@ -15,10 +15,8 @@ Providers are the bridge between Pragmatiks and external tools. Each provider kn
 
 | Provider | Resources |
 |----------|-----------|
-| Snowflake | Warehouses, databases, schemas, users |
-| dbt | Models, tests, documentation |
-| Airbyte | Sources, destinations, connections |
 | GCP | Storage buckets, BigQuery datasets |
+| Pragma | Secrets, platform resources |
 
 ## Provider Configuration
 
@@ -27,12 +25,11 @@ Some providers require credentials or configuration. Use secrets to store sensit
 ```yaml
 provider: pragma
 resource: secret
-name: snowflake-creds
+name: gcp-credentials
 config:
   data:
-    account: "abc123.snowflakecomputing.com"
-    username: "admin"
-    password: "..."
+    project_id: "my-project"
+    service_account_key: "..."
 ```
 
 ## Building Custom Providers

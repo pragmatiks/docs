@@ -32,7 +32,7 @@ pragma resources list
 Filter by provider:
 
 ```bash
-pragma resources list --provider snowflake
+pragma resources list --provider gcp
 ```
 
 Filter by resource type:
@@ -52,19 +52,19 @@ pragma resources list --tag env:production
 Get resources by type:
 
 ```bash
-pragma resources get snowflake/warehouse
+pragma resources get gcp/storage
 ```
 
 Get a specific resource:
 
 ```bash
-pragma resources get snowflake/warehouse my-warehouse
+pragma resources get gcp/storage my-bucket
 ```
 
 ## Delete
 
 ```bash
-pragma resources delete snowflake/warehouse my-warehouse
+pragma resources delete gcp/storage my-bucket
 ```
 
 ## Register

@@ -15,16 +15,16 @@ Pragmatiks is an orchestration layer for data tools. Define your infrastructure 
 ## Quick Example
 
 ```yaml
-provider: snowflake
-resource: warehouse
-name: analytics-wh
+provider: gcp
+resource: bigquery-dataset
+name: analytics
 config:
-  size: MEDIUM
-  auto_suspend: 300
+  location: EU
+  description: Analytics data
 ```
 
 ```bash
-pragma resources apply warehouse.yaml
+pragma resources apply dataset.yaml
 ```
 
 ## Next Steps

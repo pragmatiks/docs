@@ -3,7 +3,7 @@ title: "Resources"
 description: "Resource configuration and lifecycle"
 ---
 
-A resource represents a managed object in an external tool—a Snowflake warehouse, a dbt model, an Airbyte connection.
+A resource represents a managed object in an external tool—a storage bucket, a BigQuery dataset, or a secret.
 
 ## Resource Identity
 
@@ -11,9 +11,9 @@ Every resource has a unique identity:
 
 | Field | Description | Example |
 |-------|-------------|---------|
-| `provider` | The provider that manages this resource | `snowflake` |
-| `resource` | The type of resource | `warehouse` |
-| `name` | A unique name you assign | `analytics-wh` |
+| `provider` | The provider that manages this resource | `gcp` |
+| `resource` | The type of resource | `storage` |
+| `name` | A unique name you assign | `data-lake` |
 
 ## Lifecycle States
 
@@ -33,16 +33,16 @@ Resources have configuration (what you define) and outputs (what providers produ
 
 ```yaml
 # You define this
-provider: snowflake
-resource: warehouse
-name: analytics-wh
+provider: gcp
+resource: storage
+name: data-lake
 config:
-  size: MEDIUM
-  auto_suspend: 300
+  location: EU
+  storage_class: STANDARD
 
 # Provider produces outputs after processing
 # outputs:
-#   warehouse_url: "..."
+#   bucket_url: "..."
 #   created_at: "..."
 ```
 

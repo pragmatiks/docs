@@ -7,14 +7,14 @@ Pragmatiks manages data infrastructure through three core concepts: **resources*
 
 ## Resources
 
-A resource represents something you want to manage—a warehouse, a connection, a transformation. You define resources in YAML:
+A resource represents something you want to manage—a storage bucket, a dataset, or a service account. You define resources in YAML:
 
 ```yaml
-provider: snowflake
-resource: warehouse
-name: analytics-wh
+provider: gcp
+resource: bigquery-dataset
+name: analytics
 config:
-  size: MEDIUM
+  location: EU
 ```
 
 Resources have a lifecycle: they're created, updated, and deleted based on your configuration.
@@ -23,20 +23,19 @@ Resources have a lifecycle: they're created, updated, and deleted based on your 
 
 Providers are the bridge between Pragmatiks and external tools. Each provider knows how to manage specific resource types:
 
-- **Snowflake provider**: Manages warehouses, databases, schemas
-- **dbt provider**: Manages models, tests, documentation
-- **Airbyte provider**: Manages sources, destinations, connections
+- **GCP provider**: Manages storage buckets, BigQuery datasets
+- **Pragma provider**: Manages secrets and platform resources
 
 ## Dependencies
 
 Resources can depend on other resources. Pragmatiks ensures dependencies are ready before processing dependent resources:
 
 ```yaml
-provider: dbt
-resource: model
-name: sales-summary
+provider: gcp
+resource: bigquery-dataset
+name: analytics
 depends_on:
-  - snowflake/warehouse/analytics-wh
+  - gcp/storage/data-lake
 ```
 
 ## Next Steps

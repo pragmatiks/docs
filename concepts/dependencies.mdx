@@ -10,14 +10,13 @@ Resources can depend on other resources. Pragmatiks ensures dependencies are sat
 Use `depends_on` to declare dependencies:
 
 ```yaml
-provider: dbt
-resource: model
-name: sales-summary
+provider: gcp
+resource: bigquery-dataset
+name: analytics
 depends_on:
-  - snowflake/warehouse/analytics-wh
-  - snowflake/schema/analytics
+  - gcp/storage/data-lake
 config:
-  sql: "SELECT * FROM sales"
+  location: EU
 ```
 
 ## Dependency Resolution
@@ -33,13 +32,13 @@ When you apply a resource with dependencies:
 Reference outputs from dependencies in your configuration:
 
 ```yaml
-provider: dbt
-resource: model
-name: sales-summary
+provider: gcp
+resource: bigquery-dataset
+name: analytics
 depends_on:
-  - snowflake/warehouse/analytics-wh
+  - gcp/storage/data-lake
 config:
-  warehouse: "${snowflake/warehouse/analytics-wh.outputs.name}"
+  source_bucket: "${gcp/storage/data-lake.outputs.name}"
 ```
 
 ## Dependency Cycles
