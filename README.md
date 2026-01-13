@@ -1,43 +1,68 @@
-# Mintlify Starter Kit
+# Pragmatiks Documentation
 
-Use the starter kit to get your docs deployed and ready to customize.
+[![Docs](https://img.shields.io/badge/docs-online-brightgreen)](https://docs.pragmatiks.io)
+[![Mintlify](https://img.shields.io/badge/built%20with-Mintlify-0D9373)](https://mintlify.com)
 
-Click the green **Use this template** button at the top of this repo to copy the Mintlify starter kit. The starter kit contains examples with
+**[View Documentation](https://docs.pragmatiks.io)** | **[SDK](https://github.com/pragmatiks/sdk)** | **[CLI](https://github.com/pragmatiks/cli)** | **[Providers](https://github.com/pragmatiks/providers)**
 
-- Guide pages
-- Navigation
-- Customizations
-- API reference pages
-- Use of popular components
+Official documentation for the Pragmatiks platform.
 
-**[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
+## Documentation Structure
 
-## Development
+| Section | Description |
+|---------|-------------|
+| **Getting Started** | Prerequisites, quickstart, and setup verification |
+| **Concepts** | Core concepts: resources, providers, reactive dependencies |
+| **Guides** | Error recovery, migration guides |
+| **CLI Reference** | Command-line interface documentation |
+| **SDK Reference** | Python SDK for building providers |
+| **Building Providers** | Complete guide to creating custom providers |
+| **API Reference** | REST API documentation |
 
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview your documentation changes locally. To install, use the following command:
+## Local Development
+
+Install the Mintlify CLI:
+
+```bash
+npm i -g mintlify
+```
+
+Start the local development server:
+
+```bash
+mintlify dev
+```
+
+View your changes at `http://localhost:3000`.
+
+## Project Structure
 
 ```
-npm i -g mint
+docs/
+├── docs.json              # Navigation and theme configuration
+├── index.mdx              # Landing page
+├── getting-started/       # Onboarding guides
+├── concepts/              # Core concepts
+├── guides/                # How-to guides
+├── cli/                   # CLI reference
+├── sdk/                   # SDK reference
+├── building-providers/    # Provider development
+├── api-reference/         # API documentation
+└── learn/                 # Platform overview and comparisons
 ```
 
-Run the following command at the root of your documentation, where your `docs.json` is located:
+## Writing Documentation
 
-```
-mint dev
-```
+- Use MDX format with YAML frontmatter
+- Every page requires `title` and `description` in frontmatter
+- Use relative paths for internal links
+- Test all code examples before publishing
+- Follow existing patterns for consistency
 
-View your local preview at `http://localhost:3000`.
+## Publishing
 
-## Publishing changes
+Changes pushed to `main` are automatically deployed via the Mintlify GitHub integration.
 
-Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app) to propagate changes from your repo to your deployment. Changes are deployed to production automatically after pushing to the default branch.
+## License
 
-## Need help?
-
-### Troubleshooting
-
-- If your dev environment isn't running: Run `mint update` to ensure you have the most recent version of the CLI.
-- If a page loads as a 404: Make sure you are running in a folder with a valid `docs.json`.
-
-### Resources
-- [Mintlify documentation](https://mintlify.com/docs)
+MIT
