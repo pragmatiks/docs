@@ -1,0 +1,64 @@
+---
+title: "Common Issues"
+description: "Troubleshooting guide"
+---
+
+## Authentication
+
+### "Not authenticated" error
+
+Run `pragma auth login` to authenticate.
+
+### Token expired
+
+Re-authenticate with `pragma auth login`.
+
+## Resources
+
+### Resource stuck in PENDING
+
+Check if dependencies are in READY state:
+
+```bash
+pragma resources get <provider>/<resource> <name>
+```
+
+### Resource failed
+
+Check the error message:
+
+```bash
+pragma resources get <provider>/<resource> <name>
+```
+
+Fix the configuration and re-apply with `--pending`.
+
+## Dead Letter Events
+
+### Events piling up
+
+Check dead letter queue:
+
+```bash
+pragma ops dead-letter list
+```
+
+Investigate individual events:
+
+```bash
+pragma ops dead-letter show <event-id>
+```
+
+## Provider Development
+
+### "Could not detect provider package"
+
+Run commands from the provider directory, or specify `--package`:
+
+```bash
+pragma provider sync --package mycompany_provider
+```
+
+## Getting Help
+
+Contact support at support@pragmatiks.io.

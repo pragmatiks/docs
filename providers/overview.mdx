@@ -1,0 +1,40 @@
+---
+title: "Provider Catalog"
+description: "Available providers and their resources"
+---
+
+Providers extend Pragmatiks to manage different data tools.
+
+## Available Providers
+
+### GCP
+
+Google Cloud Platform resources.
+
+| Resource | Description |
+|----------|-------------|
+| `gcp/storage` | Cloud Storage buckets |
+| `gcp/bigquery-dataset` | BigQuery datasets |
+
+### Pragma (Built-in)
+
+Platform resources.
+
+| Resource | Description |
+|----------|-------------|
+| `pragma/secret` | Secure credential storage |
+
+## Coming Soon
+
+- Snowflake
+- dbt
+- Airbyte
+- Fivetran
+
+## Building Custom Providers
+
+Need a provider that doesn't exist? Build your own.
+
+<Card title="Building Providers" icon="hammer" href="/building-providers/overview">
+  Create a custom provider.
+</Card>

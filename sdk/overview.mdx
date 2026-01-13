@@ -1,0 +1,43 @@
+---
+title: "SDK Overview"
+description: "Python SDK for Pragmatiks"
+---
+
+The Pragmatiks SDK provides a Python client for interacting with the API programmatically.
+
+## Installation
+
+```bash
+pip install pragma-sdk
+```
+
+## Basic Usage
+
+```python
+from pragma_sdk import PragmaClient
+
+client = PragmaClient()
+
+# List resources
+resources = client.list_resources(provider="snowflake")
+for resource in resources:
+    print(f"{resource['name']}: {resource['lifecycle_state']}")
+
+# Apply a resource
+result = client.apply_resource({
+    "provider": "snowflake",
+    "resource": "warehouse",
+    "name": "my-warehouse",
+    "config": {"size": "SMALL"}
+})
+```
+
+## Authentication
+
+The SDK uses the same credentials as the CLI. Run `pragma auth login` first, or set the `PRAGMA_AUTH_TOKEN` environment variable.
+
+## Next Steps
+
+<Card title="API Reference" icon="code" href="/api-reference/introduction">
+  Full API documentation.
+</Card>

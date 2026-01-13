@@ -1,0 +1,54 @@
+---
+title: "Concepts Overview"
+description: "Core concepts in Pragmatiks"
+---
+
+Pragmatiks manages data infrastructure through three core concepts: **resources**, **providers**, and **dependencies**.
+
+## Resources
+
+A resource represents something you want to manage—a warehouse, a connection, a transformation. You define resources in YAML:
+
+```yaml
+provider: snowflake
+resource: warehouse
+name: analytics-wh
+config:
+  size: MEDIUM
+```
+
+Resources have a lifecycle: they're created, updated, and deleted based on your configuration.
+
+## Providers
+
+Providers are the bridge between Pragmatiks and external tools. Each provider knows how to manage specific resource types:
+
+- **Snowflake provider**: Manages warehouses, databases, schemas
+- **dbt provider**: Manages models, tests, documentation
+- **Airbyte provider**: Manages sources, destinations, connections
+
+## Dependencies
+
+Resources can depend on other resources. Pragmatiks ensures dependencies are ready before processing dependent resources:
+
+```yaml
+provider: dbt
+resource: model
+name: sales-summary
+depends_on:
+  - snowflake/warehouse/analytics-wh
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Resources" icon="cube" href="/concepts/resources">
+    Deep dive into resource configuration.
+  </Card>
+  <Card title="Providers" icon="plug" href="/concepts/providers">
+    Learn how providers work.
+  </Card>
+  <Card title="Dependencies" icon="diagram-project" href="/concepts/dependencies">
+    Understand dependency management.
+  </Card>
+</CardGroup>

@@ -1,0 +1,72 @@
+---
+title: "Resources"
+description: "Resource configuration and lifecycle"
+---
+
+A resource represents a managed object in an external tool—a Snowflake warehouse, a dbt model, an Airbyte connection.
+
+## Resource Identity
+
+Every resource has a unique identity:
+
+| Field | Description | Example |
+|-------|-------------|---------|
+| `provider` | The provider that manages this resource | `snowflake` |
+| `resource` | The type of resource | `warehouse` |
+| `name` | A unique name you assign | `analytics-wh` |
+
+## Lifecycle States
+
+Resources move through these states:
+
+| State | Description |
+|-------|-------------|
+| **DRAFT** | Saved but not submitted for processing |
+| **PENDING** | Queued for processing |
+| **PROCESSING** | Currently being processed |
+| **READY** | Successfully processed |
+| **FAILED** | Processing failed |
+
+## Configuration and Outputs
+
+Resources have configuration (what you define) and outputs (what providers produce):
+
+```yaml
+# You define this
+provider: snowflake
+resource: warehouse
+name: analytics-wh
+config:
+  size: MEDIUM
+  auto_suspend: 300
+
+# Provider produces outputs after processing
+# outputs:
+#   warehouse_url: "..."
+#   created_at: "..."
+```
+
+## Applying Resources
+
+By default, resources are created in DRAFT state:
+
+```bash
+pragma resources apply warehouse.yaml
+```
+
+To queue for immediate processing:
+
+```bash
+pragma resources apply --pending warehouse.yaml
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Dependencies" icon="diagram-project" href="/concepts/dependencies">
+    Learn how resources depend on each other.
+  </Card>
+  <Card title="CLI Resources" icon="terminal" href="/cli/resources">
+    Resource management commands.
+  </Card>
+</CardGroup>

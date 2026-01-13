@@ -1,0 +1,60 @@
+---
+title: "Providers"
+description: "Build and deploy providers"
+---
+
+## Initialize
+
+Create a new provider project:
+
+```bash
+pragma provider init mycompany
+```
+
+With options:
+
+```bash
+pragma provider init mycompany --output ./providers/mycompany --defaults
+```
+
+## Update
+
+Update an existing project with template changes:
+
+```bash
+pragma provider update
+```
+
+## Sync
+
+Register resource types with the platform:
+
+```bash
+pragma provider sync
+```
+
+Preview without making changes:
+
+```bash
+pragma provider sync --dry-run
+```
+
+## Push
+
+Build and upload your provider:
+
+```bash
+pragma provider push
+```
+
+Build and deploy:
+
+```bash
+pragma provider push --deploy
+```
+
+## Next Steps
+
+<Card title="Building Providers" icon="hammer" href="/building-providers/overview">
+  Learn how to build providers.
+</Card>

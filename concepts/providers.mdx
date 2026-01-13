@@ -1,0 +1,51 @@
+---
+title: "Providers"
+description: "How providers manage resources"
+---
+
+Providers are the bridge between Pragmatiks and external tools. Each provider knows how to create, update, and delete specific resource types.
+
+## What Providers Do
+
+1. **Register resource types** they can manage
+2. **Process lifecycle events** when resources are created, updated, or deleted
+3. **Report results** back to the platform
+
+## Available Providers
+
+| Provider | Resources |
+|----------|-----------|
+| Snowflake | Warehouses, databases, schemas, users |
+| dbt | Models, tests, documentation |
+| Airbyte | Sources, destinations, connections |
+| GCP | Storage buckets, BigQuery datasets |
+
+## Provider Configuration
+
+Some providers require credentials or configuration. Use secrets to store sensitive values:
+
+```yaml
+provider: pragma
+resource: secret
+name: snowflake-creds
+config:
+  data:
+    account: "abc123.snowflakecomputing.com"
+    username: "admin"
+    password: "..."
+```
+
+## Building Custom Providers
+
+You can build providers for any tool. See the Building Providers guide for details.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Building Providers" icon="hammer" href="/building-providers/overview">
+    Create your own provider.
+  </Card>
+  <Card title="Provider Catalog" icon="list" href="/providers/overview">
+    Browse available providers.
+  </Card>
+</CardGroup>

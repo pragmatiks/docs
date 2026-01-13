@@ -1,0 +1,49 @@
+---
+title: "CLI Overview"
+description: "Command-line interface for Pragmatiks"
+---
+
+The Pragma CLI provides declarative resource management for data infrastructure.
+
+## Command Groups
+
+| Command | Description |
+|---------|-------------|
+| `pragma resources` | Manage resources |
+| `pragma auth` | Authentication |
+| `pragma config` | Configuration |
+| `pragma provider` | Provider development |
+| `pragma ops` | Operations |
+
+## Getting Started
+
+```bash
+# Install
+pip install pragma-cli
+
+# Authenticate
+pragma auth login
+
+# Apply a resource
+pragma resources apply myresource.yaml
+
+# List resources
+pragma resources list
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/cli/installation">
+    Install and configure the CLI.
+  </Card>
+  <Card title="Authentication" icon="key" href="/cli/authentication">
+    Authenticate with the platform.
+  </Card>
+  <Card title="Resources" icon="cube" href="/cli/resources">
+    Manage resources.
+  </Card>
+  <Card title="Providers" icon="plug" href="/cli/providers">
+    Build providers.
+  </Card>
+</CardGroup>

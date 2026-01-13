@@ -1,0 +1,69 @@
+---
+title: "Building Providers"
+description: "Create custom providers for Pragmatiks"
+---
+
+Providers let you extend Pragmatiks to manage any data tool.
+
+## Getting Started
+
+Create a new provider project:
+
+```bash
+pragma provider init mycompany
+cd mycompany-provider
+```
+
+## Project Structure
+
+```
+mycompany-provider/
+├── pyproject.toml
+├── src/mycompany_provider/
+│   └── resources.py
+└── tests/
+```
+
+## Defining Resources
+
+```python
+from pragma_sdk import Resource, Config, provider
+
+class WarehouseConfig(Config):
+    size: str = "SMALL"
+
+@provider.resource("mycompany", "warehouse")
+class Warehouse(Resource):
+    config: WarehouseConfig
+
+    async def on_create(self):
+        # Create the warehouse
+        pass
+
+    async def on_update(self):
+        # Update the warehouse
+        pass
+
+    async def on_delete(self):
+        # Delete the warehouse
+        pass
+```
+
+## Testing
+
+```bash
+uv run pytest tests/
+```
+
+## Deploying
+
+```bash
+pragma provider sync    # Register resource types
+pragma provider push --deploy  # Build and deploy
+```
+
+## Next Steps
+
+<Card title="CLI Providers" icon="terminal" href="/cli/providers">
+  Provider CLI commands.
+</Card>

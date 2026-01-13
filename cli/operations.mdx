@@ -1,0 +1,66 @@
+---
+title: "Operations"
+description: "Platform operations"
+---
+
+## Dead Letter Events
+
+Failed events that require manual intervention.
+
+### List
+
+```bash
+pragma ops dead-letter list
+```
+
+Filter by provider:
+
+```bash
+pragma ops dead-letter list --provider snowflake
+```
+
+### Show Details
+
+```bash
+pragma ops dead-letter show <event-id>
+```
+
+### Retry
+
+Retry a single event:
+
+```bash
+pragma ops dead-letter retry <event-id>
+```
+
+Retry all events:
+
+```bash
+pragma ops dead-letter retry --all
+```
+
+### Delete
+
+Delete a single event:
+
+```bash
+pragma ops dead-letter delete <event-id>
+```
+
+Delete all events for a provider:
+
+```bash
+pragma ops dead-letter delete --provider snowflake
+```
+
+Delete all events:
+
+```bash
+pragma ops dead-letter delete --all
+```
+
+## Next Steps
+
+<Card title="Troubleshooting" icon="wrench" href="/troubleshooting/common-issues">
+  Common issues and solutions.
+</Card>

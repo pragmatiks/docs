@@ -1,0 +1,52 @@
+---
+title: "Installation"
+description: "Install the Pragma CLI"
+---
+
+## Requirements
+
+- Python 3.11+
+
+## Install
+
+```bash
+pip install pragma-cli
+```
+
+Or with pipx:
+
+```bash
+pipx install pragma-cli
+```
+
+## Verify
+
+```bash
+pragma --version
+```
+
+## Shell Completion
+
+### Bash
+
+```bash
+eval "$(pragma --show-completion bash)"
+```
+
+### Zsh
+
+```bash
+eval "$(pragma --show-completion zsh)"
+```
+
+### Fish
+
+```fish
+pragma --show-completion fish | source
+```
+
+## Next Steps
+
+<Card title="Authentication" icon="key" href="/cli/authentication">
+  Log in to the platform.
+</Card>

@@ -1,0 +1,58 @@
+---
+title: "Authentication"
+description: "Authenticate with Pragmatiks"
+---
+
+## Login
+
+```bash
+pragma auth login
+```
+
+Opens your browser for authentication.
+
+## Check Status
+
+```bash
+pragma auth whoami
+```
+
+## Logout
+
+```bash
+pragma auth logout
+```
+
+## Contexts
+
+Contexts let you work with multiple environments.
+
+### List Contexts
+
+```bash
+pragma config get-contexts
+```
+
+### Switch Context
+
+```bash
+pragma config use-context production
+```
+
+### Create Context
+
+```bash
+pragma config set-context staging --api-url <url>
+```
+
+### Delete Context
+
+```bash
+pragma config delete-context staging
+```
+
+## Next Steps
+
+<Card title="Resources" icon="cube" href="/cli/resources">
+  Start managing resources.
+</Card>

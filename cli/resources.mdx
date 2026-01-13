@@ -1,0 +1,88 @@
+---
+title: "Resources"
+description: "Manage resources with the CLI"
+---
+
+## Apply
+
+Create or update resources from YAML:
+
+```bash
+pragma resources apply myresource.yaml
+```
+
+Apply multiple files:
+
+```bash
+pragma resources apply file1.yaml file2.yaml
+```
+
+Queue for immediate processing:
+
+```bash
+pragma resources apply --pending myresource.yaml
+```
+
+## List
+
+```bash
+pragma resources list
+```
+
+Filter by provider:
+
+```bash
+pragma resources list --provider snowflake
+```
+
+Filter by resource type:
+
+```bash
+pragma resources list --resource warehouse
+```
+
+Filter by tags:
+
+```bash
+pragma resources list --tag env:production
+```
+
+## Get
+
+Get resources by type:
+
+```bash
+pragma resources get snowflake/warehouse
+```
+
+Get a specific resource:
+
+```bash
+pragma resources get snowflake/warehouse my-warehouse
+```
+
+## Delete
+
+```bash
+pragma resources delete snowflake/warehouse my-warehouse
+```
+
+## Register
+
+Register a resource type:
+
+```bash
+pragma resources register mycompany/database --description "Database instances"
+```
+
+## Unregister
+
+```bash
+pragma resources unregister mycompany/database
+```
+
+## Next Steps
+
+<Card title="Resource Concepts" icon="book" href="/concepts/resources">
+  Learn about resource lifecycle.
+</Card>
