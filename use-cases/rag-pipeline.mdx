@@ -1,0 +1,144 @@
+---
+title: "RAG Pipeline"
+description: "Build AI-powered retrieval systems in minutes instead of weeks"
+---
+
+## The Problem
+
+RAG (Retrieval Augmented Generation) pipelines are the backbone of modern AI applications. From customer support chatbots to internal knowledge bases, every AI company is building some form of RAG.
+
+But here's the reality: RAG pipelines require multiple components working in perfect harmony:
+
+- **Data ingestion** - Getting your documents into the system
+- **Embedding generation** - Converting text to vectors
+- **Vector storage** - Storing and indexing embeddings
+- **Retrieval API** - Querying relevant documents
+- **LLM integration** - Generating responses
+
+When any component changes, the entire chain needs to adapt. Traditional approaches make this a nightmare.
+
+## The Traditional Approach
+
+**Timeline: 2-3 weeks (if nothing goes wrong)**
+
+### Step 1: Research (2-3 days)
+
+Choose your vector database. Pinecone? Weaviate? Qdrant? Milvus? Chroma? Each has different APIs, pricing models, and operational characteristics. Read the comparisons. Watch the YouTube videos. Ask on Discord.
+
+### Step 2: Deploy Infrastructure (2-3 days)
+
+Set up hosting for your chosen database. Configure networking. Set up authentication. Handle TLS certificates. Debug why connections are timing out.
+
+### Step 3: Configure Embedding Pipeline (2-3 days)
+
+Choose an embedding model (OpenAI? Cohere? Open source?). Set up inference infrastructure or API connections. Figure out batching and rate limits. Handle retries when the API is flaky.
+
+### Step 4: Wire Everything Together (2-3 days)
+
+Connect your vector database to the embedding service. Write the glue code. Handle error cases. Figure out why documents are being embedded twice.
+
+### Step 5: Build the Retrieval API (2-3 days)
+
+Create an API layer with authentication. Implement query preprocessing. Add relevance scoring. Handle the edge cases.
+
+### Step 6: Set Up Monitoring (1-2 days)
+
+Configure alerting for when things break. Set up dashboards. Figure out what metrics actually matter.
+
+### Step 7: Maintain It Forever
+
+Your data source schema changes? Manually update the ingestion pipeline.
+Embedding model gets deprecated? Rewrite the embedding service.
+Vector database needs a version upgrade? Schedule the migration.
+Each change ripples through every component.
+
+**Total: 2-3 weeks of setup, then ongoing maintenance burden.**
+
+## With pragma-os
+
+**Timeline: 15 minutes**
+
+### Step 1: Browse the Marketplace
+
+Find the resources you need. Vector storage, embedding pipelines, and retrieval APIs are all available as declarative resources.
+
+### Step 2: Define Your Pipeline
+
+```yaml
+# storage.yaml - Your document storage
+provider: gcp
+resource: storage
+name: documents
+config:
+  location: EU
+  storage_class: STANDARD
+```
+
+```yaml
+# embeddings.yaml - Your vector storage
+provider: gcp
+resource: bigquery-dataset
+name: embeddings
+depends_on:
+  - gcp/storage/documents
+config:
+  location: EU
+```
+
+```yaml
+# retrieval.yaml - Your query API (coming soon)
+provider: gcp
+resource: cloud-run
+name: retrieval-api
+depends_on:
+  - gcp/bigquery-dataset/embeddings
+config:
+  region: europe-west4
+```
+
+### Step 3: Apply and Watch
+
+```bash
+pragma resources apply .
+```
+
+pragma-os provisions everything and establishes reactive dependencies between components.
+
+## Reactive Dependencies in Action
+
+This is where pragma-os shines. Traditional pipelines break when things change. pragma-os pipelines adapt.
+
+**When your data source schema changes:**
+
+1. The document storage resource detects the change
+2. The embedding pipeline automatically adjusts to the new schema
+3. The vector index rebuilds with updated embeddings
+4. The retrieval API reflects the new structure
+
+**All automatically. No manual intervention. No 2am pages.**
+
+Your RAG pipeline stays current with your data, not stuck in the state it was when you first deployed it.
+
+## What's Coming
+
+The examples above show the vision. Today, pragma-os provides the foundational GCP resources (Cloud Storage, BigQuery, Cloud Run) that serve as building blocks.
+
+**Full RAG-specific resources are our next priority:**
+
+- Vector database resources (Pinecone, Weaviate integrations)
+- Embedding pipeline resources with model selection
+- Pre-built retrieval patterns with best practices baked in
+
+The goal: one-click RAG deployment where you specify your data source and pragma-os handles everything else.
+
+## Why This Matters
+
+AI teams shouldn't spend weeks on infrastructure plumbing. They should spend that time on what makes their product unique: the prompts, the user experience, the domain-specific logic.
+
+pragma-os handles the undifferentiated heavy lifting so you can focus on building something remarkable.
+
+---
+
+<Card title="Get Started" icon="rocket" href="/quickstart">
+  Try pragma-os with your first resource in 5 minutes.
+</Card>

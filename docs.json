@@ -17,7 +17,8 @@
             "group": "Getting started",
             "pages": [
               "index",
-              "quickstart"
+              "quickstart",
+              "how-we-compare"
             ]
           },
           {
@@ -27,6 +28,12 @@
               "concepts/resources",
               "concepts/providers",
               "concepts/reactive-dependencies"
+            ]
+          },
+          {
+            "group": "Use Cases",
+            "pages": [
+              "use-cases/rag-pipeline"
             ]
           },
           {
