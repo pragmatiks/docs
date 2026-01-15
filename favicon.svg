@@ -11,8 +11,8 @@
   <line x1="23.5" y1="30.5" x2="1.5" y2="30.5" stroke="#FF6611" stroke-width="0.75"/>
   <line x1="1.5" y1="30.5" x2="1.5" y2="8.5" stroke="#FF6611" stroke-width="0.75"/>
 
-  <!-- "/" symbol -->
-  <text x="16" y="22"
-        font-family="'Courier New', monospace" font-size="18" font-weight="bold" fill="#FF6611"
-        text-anchor="middle">/</text>
+  <!-- "/" from PP Supply Mono, converted to path -->
+  <g transform="translate(7, 26) scale(0.03, -0.03)">
+    <path d="M180 0V124L520 540V700H420V576L80 160V0Z" fill="#FF6611"/>
+  </g>
 </svg>
