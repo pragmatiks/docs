@@ -7,6 +7,20 @@
     "light": "#FF8844",
     "dark": "#DD5500"
   },
+  "fonts": {
+    "heading": {
+      "family": "PP Supply Mono",
+      "source": "/fonts/PPSupplyMono-Regular.woff2",
+      "format": "woff2",
+      "weight": 400
+    },
+    "body": {
+      "family": "PP Supply Mono",
+      "source": "/fonts/PPSupplyMono-Regular.woff2",
+      "format": "woff2",
+      "weight": 400
+    }
+  },
   "favicon": "/favicon.svg",
   "navigation": {
     "tabs": [
