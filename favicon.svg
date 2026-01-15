@@ -1,4 +1,18 @@
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="32" height="32" rx="6" fill="#F97316"/>
-  <text x="8" y="24" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" fill="white">P</text>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Chamfered hexagon background -->
+  <polygon points="1.5,8.5 8.5,1.5 30.5,1.5 30.5,23.5 23.5,30.5 1.5,30.5" fill="#0a0a0a"/>
+
+  <!-- Border accents -->
+  <line x1="1.5" y1="8.5" x2="8.5" y2="1.5" stroke="#FF6611" stroke-width="1.5"/>
+  <line x1="30.5" y1="23.5" x2="23.5" y2="30.5" stroke="#FF6611" stroke-width="1.5"/>
+  <line x1="8.5" y1="1.5" x2="30.5" y2="1.5" stroke="#FF6611" stroke-width="0.75"/>
+  <line x1="30.5" y1="1.5" x2="30.5" y2="23.5" stroke="#FF6611" stroke-width="0.75"/>
+  <line x1="23.5" y1="30.5" x2="1.5" y2="30.5" stroke="#FF6611" stroke-width="0.75"/>
+  <line x1="1.5" y1="30.5" x2="1.5" y2="8.5" stroke="#FF6611" stroke-width="0.75"/>
+
+  <!-- "/" symbol -->
+  <text x="16" y="22"
+        font-family="'Courier New', monospace" font-size="18" font-weight="bold" fill="#FF6611"
+        text-anchor="middle">/</text>
 </svg>

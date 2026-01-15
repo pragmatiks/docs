@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Pragmatiks",
   "colors": {
-    "primary": "#F97316",
-    "light": "#FB923C",
-    "dark": "#EA580C"
+    "primary": "#FF6611",
+    "light": "#FF8844",
+    "dark": "#DD5500"
   },
   "favicon": "/favicon.svg",
   "navigation": {

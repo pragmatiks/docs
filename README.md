@@ -4,8 +4,10 @@
 
 # Pragma-OS Documentation
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/pragmatiks/pragma-docs)
 [![Docs](https://img.shields.io/badge/docs-online-brightgreen)](https://docs.pragmatiks.io)
 [![Mintlify](https://img.shields.io/badge/built%20with-Mintlify-0D9373)](https://mintlify.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **[View Documentation](https://docs.pragmatiks.io)** | **[SDK](https://github.com/pragmatiks/pragma-sdk)** | **[CLI](https://github.com/pragmatiks/pragma-cli)** | **[Providers](https://github.com/pragmatiks/pragma-providers)**
 
