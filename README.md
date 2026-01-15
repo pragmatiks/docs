@@ -1,11 +1,15 @@
-# Pragmatiks Documentation
+<p align="center">
+  <img src="assets/wordmark.png" alt="Pragmatiks" width="800">
+</p>
+
+# Pragma-OS Documentation
 
 [![Docs](https://img.shields.io/badge/docs-online-brightgreen)](https://docs.pragmatiks.io)
 [![Mintlify](https://img.shields.io/badge/built%20with-Mintlify-0D9373)](https://mintlify.com)
 
 **[View Documentation](https://docs.pragmatiks.io)** | **[SDK](https://github.com/pragmatiks/sdk)** | **[CLI](https://github.com/pragmatiks/cli)** | **[Providers](https://github.com/pragmatiks/providers)**
 
-Official documentation for the Pragmatiks platform.
+Official documentation for the pragma-os platform.
 
 ## Documentation Structure
 
