@@ -15,6 +15,32 @@ The Pragma CLI provides declarative resource management for data infrastructure.
 | `pragma providers` | Provider development |
 | `pragma ops` | Operations |
 
+## Global Options
+
+### Output Format
+
+Many commands support the `--output` / `-o` flag for structured output:
+
+| Format | Description |
+|--------|-------------|
+| `table` | Human-readable table (default) |
+| `json` | JSON for scripting and automation |
+| `yaml` | YAML format |
+
+```bash
+# List resources as JSON
+pragma resources list --output json
+
+# Get resource details as YAML
+pragma resources get gcp/storage my-bucket -o yaml
+```
+
+This is useful for scripting and piping output to other tools like `jq`:
+
+```bash
+pragma resources list -o json | jq '.[] | select(.status == "ready")'
+```
+
 ## Getting Started
 
 ```bash
