@@ -277,6 +277,132 @@ class Database(Resource[DatabaseConfig, DatabaseOutputs]):
             pass
 ```
 
+## Creating Subresources
+
+Providers can create and manage subresources from within lifecycle handlers. This enables composition patterns where a high-level resource provisions multiple lower-level resources.
+
+### The Pattern
+
+```python
+async def on_create(self) -> AppOutputs:
+    # 1. Create the subresource instance
+    db = DatabaseResource(
+        name=f"{self.name}-db",
+        config=DatabaseConfig(size_gb=10),
+    )
+
+    # 2. Set ownership for cascading deletes
+    db.set_owner(self)
+
+    # 3. Apply (create) the subresource
+    await db.apply()
+
+    # 4. Wait for it to be ready
+    await db.wait_ready(timeout=120.0)
+
+    # 5. Use its outputs
+    return AppOutputs(db_url=db.outputs.connection_url)
+```
+
+### Methods
+
+**`set_owner(parent)`** - Establishes an ownership relationship. When the parent resource is deleted, owned subresources are automatically cleaned up via cascading deletes. Returns `self` for method chaining.
+
+**`apply()`** - Sends the resource to the API for creation. The resource enters `PENDING` state and a lifecycle event is emitted for the appropriate provider to process. Returns `self` for method chaining.
+
+**`wait_ready(timeout)`** - Waits for the resource to reach `READY` state. Updates the resource instance with outputs from the completed operation. Raises `TimeoutError` if the timeout is exceeded or `ResourceFailedError` if the resource fails.
+
+### Complete Example
+
+Here's a complete example of an application resource that provisions its own database:
+
+```python
+from pragma_sdk import Resource, Config, Outputs, Provider
+
+
+class AppConfig(Config):
+    environment: str = "production"
+    db_size_gb: int = 10
+
+
+class AppOutputs(Outputs):
+    app_url: str
+    db_connection_url: str
+
+
+class DatabaseConfig(Config):
+    size_gb: int
+
+
+class DatabaseOutputs(Outputs):
+    connection_url: str
+
+
+mycloud = Provider(name="mycloud")
+
+
+@mycloud.resource("database")
+class Database(Resource[DatabaseConfig, DatabaseOutputs]):
+    async def on_create(self) -> DatabaseOutputs:
+        # Provision actual database...
+        return DatabaseOutputs(connection_url="postgres://...")
+
+    async def on_update(self, previous_config: DatabaseConfig) -> DatabaseOutputs:
+        return self.outputs
+
+    async def on_delete(self) -> None:
+        pass
+
+
+@mycloud.resource("app")
+class App(Resource[AppConfig, AppOutputs]):
+    async def on_create(self) -> AppOutputs:
+        # Create a database subresource
+        db = Database(
+            name=f"{self.name}-db",
+            config=DatabaseConfig(size_gb=self.config.db_size_gb),
+        )
+        db.set_owner(self)
+        await db.apply()
+        await db.wait_ready(timeout=120.0)
+
+        # Deploy the application using the database
+        app_url = await self._deploy_app(db.outputs.connection_url)
+
+        return AppOutputs(
+            app_url=app_url,
+            db_connection_url=db.outputs.connection_url,
+        )
+
+    async def on_update(self, previous_config: AppConfig) -> AppOutputs:
+        # Subresource updates are handled automatically via dependencies
+        return self.outputs
+
+    async def on_delete(self) -> None:
+        # Subresources are deleted automatically via cascading deletes
+        await self._undeploy_app()
+
+    async def _deploy_app(self, db_url: str) -> str:
+        # Deploy logic here...
+        return f"https://{self.name}.example.com"
+
+    async def _undeploy_app(self) -> None:
+        # Cleanup logic here...
+        pass
+```
+
+### When to Use Subresources
+
+| Use Case | Approach |
+|----------|----------|
+| Encapsulated infrastructure (DB, cache, etc.) | Subresources with ownership |
+| Shared resources across multiple parents | Dependencies without ownership |
+| User-managed separate resources | Separate top-level resources |
+
+<Tip>
+Use subresources when the child resource's lifecycle is tightly coupled to the parent. If users might want to manage the child independently, expose it as a separate resource type instead.
+</Tip>
+
 ## Testing Lifecycle Methods
 
 Use the `ProviderHarness` to test your lifecycle methods without infrastructure:
