@@ -56,7 +56,7 @@
           "ops"
         ],
         "summary": "List Dead Letter Events",
-        "description": "List all dead letter events for authenticated tenant.\n\nAuthentication required via Clerk JWT token. Events automatically scoped\nto user's organization namespace.\n\nReturns:\n    List of dead letter events, optionally filtered by provider.",
+        "description": "List all failed events for the authenticated tenant.\n\nReturns events that failed processing after exhausting retries.\nUse this endpoint to investigate failures and retry or delete events.\n\nReturns:\n    List of failed events, optionally filtered by provider.",
         "operationId": "ops-list_dead_letter_events",
         "parameters": [
           {
@@ -110,7 +110,7 @@
           "ops"
         ],
         "summary": "Bulk Delete Dead Letter Events",
-        "description": "Bulk delete dead letter events.\n\nRequires either `?all=true` to delete all events or `?provider=x` to delete\nevents for a specific provider. Returns count of deleted events.\n\nAuthentication required. Only deletes events within user's organization namespace.\n\nReturns:\n    Dictionary with count of deleted events.\n\nRaises:\n    HTTPException: 400 if neither `all=true` nor `provider` specified.",
+        "description": "Bulk delete failed events.\n\nRequires either `?all=true` to delete all events or `?provider=x` to delete\nevents for a specific provider.\n\nReturns:\n    Dictionary with count of deleted events.\n\nRaises:\n    HTTPException: 400 if neither `all=true` nor `provider` specified.",
         "operationId": "ops-bulk_delete_dead_letter_events",
         "parameters": [
           {
@@ -184,7 +184,7 @@
           "ops"
         ],
         "summary": "Get Dead Letter Event",
-        "description": "Get a single dead letter event by event ID.\n\nAuthentication required. Only returns events within user's organization namespace.\n\nReturns:\n    Dead letter event with error details and payload.\n\nRaises:\n    HTTPException: 404 if event not found.",
+        "description": "Get a single failed event by ID.\n\nReturns:\n    Failed event with error details and original payload.\n\nRaises:\n    HTTPException: 404 if event not found.",
         "operationId": "ops-get_dead_letter_event",
         "parameters": [
           {
@@ -225,7 +225,7 @@
           "ops"
         ],
         "summary": "Delete Dead Letter Event",
-        "description": "Delete a single dead letter event.\n\nPermanently removes the event from dead letter storage.\nIdempotent operation - succeeds even if event doesn't exist.\n\nAuthentication required. Only deletes events within user's organization namespace.",
+        "description": "Delete a single failed event.\n\nPermanently removes the event. Idempotent - succeeds even if event doesn't exist.",
         "operationId": "ops-delete_dead_letter_event",
         "parameters": [
           {
@@ -261,7 +261,7 @@
           "ops"
         ],
         "summary": "Retry Dead Letter Event",
-        "description": "Retry a single dead letter event.\n\nCreates a new OutboxEvent from the dead letter event and deletes\nthe dead letter event. The new event will be picked up by the\noutbox publisher for processing.\n\nAuthentication required. Only retries events within user's organization namespace.\n\nReturns:\n    Newly created OutboxEvent queued for processing.\n\nRaises:\n    HTTPException: 404 if event not found.",
+        "description": "Retry a single failed event.\n\nRequeues the event for processing and removes it from the failed events list.\nThe event will be processed automatically.\n\nReturns:\n    Event queued for processing.\n\nRaises:\n    HTTPException: 404 if event not found.",
         "operationId": "ops-retry_dead_letter_event",
         "parameters": [
           {
@@ -304,7 +304,7 @@
           "ops"
         ],
         "summary": "Retry All Dead Letter Events",
-        "description": "Retry all dead letter events for authenticated tenant.\n\nCreates new OutboxEvents from all dead letter events and deletes\nthe original dead letter events. Events will be picked up by the\noutbox publisher for processing.\n\nAuthentication required. Only retries events within user's organization namespace.\n\nReturns:\n    Dictionary with count of retried events.",
+        "description": "Retry all failed events for the authenticated tenant.\n\nRequeues all failed events for processing and removes them from the\nfailed events list. Events will be processed automatically.\n\nReturns:\n    Dictionary with count of retried events.",
         "operationId": "ops-retry_all_dead_letter_events",
         "responses": {
           "200": {
@@ -706,7 +706,7 @@
           "providers"
         ],
         "summary": "Delete Provider",
-        "description": "Delete a provider and all associated resources.\n\nRemoves the provider deployment, resource definitions, pending events,\nand NATS messages/consumers. By default, fails if the provider has any\nresources. Use cascade=true to delete all resources along with the provider.\n\nCleanup order:\n1. Kubernetes Deployment (if exists)\n2. Resources (if cascade=true)\n3. Resource definitions\n4. Outbox events\n5. Dead letter events\n6. NATS messages (purged from stream)\n7. NATS durable consumer\n\nArgs:\n    provider_id: Unique identifier for the provider to delete.\n    service: Provider service for deletion orchestration.\n    cascade: If true, delete all resources. If false (default), fail if resources exist.\n\nReturns:\n    ProviderDeleteResult with cleanup summary.\n\nRaises:\n    HTTPException: 409 if provider has resources and cascade=false.\n    HTTPException: 500 if deletion fails.",
+        "description": "Delete a provider and all associated data.\n\nRemoves the provider deployment, resource definitions, and pending events.\nBy default, fails if the provider has any resources.\nUse cascade=true to delete all resources along with the provider.\n\nArgs:\n    provider_id: Unique identifier for the provider to delete.\n    service: Provider service for deletion orchestration.\n    cascade: If true, delete all resources. If false (default), fail if resources exist.\n\nReturns:\n    ProviderDeleteResult with cleanup summary.\n\nRaises:\n    HTTPException: 409 if provider has resources and cascade=false.\n    HTTPException: 500 if deletion fails.",
         "operationId": "providers-delete_provider",
         "parameters": [
           {
@@ -761,7 +761,7 @@
           "resources"
         ],
         "summary": "List Resource Types",
-        "description": "List available resource types for authenticated tenant.\n\nReturns resource definitions (types) that have been registered by deployed providers.\nUse this to discover what resource types are available to create.\n\nAuthentication required via Clerk JWT token. Resource definitions automatically scoped\nto user's organization namespace.\n\nReturns:\n    List of resource definitions, ordered by provider and resource name.",
+        "description": "List available resource types.\n\nReturns resource types that have been registered by deployed providers.\nUse this to discover what resource types are available to create.\n\nReturns:\n    List of resource types, ordered by provider and resource name.",
         "operationId": "resources-list_resource_types",
         "parameters": [
           {
@@ -817,7 +817,7 @@
           "resources"
         ],
         "summary": "List Resources",
-        "description": "List all resources for authenticated tenant.\n\nAuthentication required via Clerk JWT token. Resources automatically scoped\nto user's organization namespace.\n\nReturns:\n    List of resources matching filters, ordered by name.",
+        "description": "List all resources.\n\nReturns:\n    List of resources matching filters, ordered by name.",
         "operationId": "resources-list_resources",
         "parameters": [
           {
@@ -912,7 +912,7 @@
           "resources"
         ],
         "summary": "Get Resource",
-        "description": "Get resource by ID for authenticated tenant.\n\nAuthentication required. Only returns resources within user's organization namespace.\n\nReturns:\n    Resource with complete configuration and state.\n\nRaises:\n    HTTPException: 404 if resource not found.",
+        "description": "Get resource by ID.\n\nReturns:\n    Resource with complete configuration and state.\n\nRaises:\n    HTTPException: 404 if resource not found.",
         "operationId": "resources-get_resource",
         "parameters": [
           {
@@ -953,7 +953,7 @@
           "resources"
         ],
         "summary": "Delete Resource",
-        "description": "Initiate resource deletion via provider lifecycle for authenticated tenant.\n\nTriggers the provider's on_delete() method. The resource is set to PENDING state\nand will be removed from the database when the provider confirms successful deletion.\n\nIdempotent: Returns 204 if resource doesn't exist (already deleted).\n\nAuthentication required. Only deletes resources within user's organization namespace.\n\nReturns:\n    Resource in PENDING state awaiting provider deletion.\n\nRaises:\n    HTTPException: 204 if resource not found (already deleted).\n        409 if resource is currently being processed.",
+        "description": "Delete a resource.\n\nTriggers the provider's deletion handler. The resource is set to PENDING state\nand will be removed when the provider confirms successful deletion.\n\nIdempotent: Returns 204 if resource doesn't exist (already deleted).\n\nReturns:\n    Resource in PENDING state awaiting provider deletion.\n\nRaises:\n    HTTPException: 204 if resource not found (already deleted).\n        409 if resource is currently being processed.",
         "operationId": "resources-delete_resource",
         "parameters": [
           {
@@ -996,7 +996,7 @@
           "resources"
         ],
         "summary": "Get Resource Status",
-        "description": "Get resource lifecycle status for authenticated tenant.\n\nReturns only the lifecycle state information for a resource, useful for\npolling resource state without fetching full configuration.\n\nThe 5-state lifecycle:\n    - draft: Resource stored but not submitted for processing\n    - pending: Resource validated and queued for provider processing\n    - processing: Provider is actively processing the resource\n    - ready: Resource successfully provisioned and operational\n    - failed: Resource processing failed (check error field for details)\n\nAuthentication required. Only returns status for resources within user's\norganization namespace.\n\nReturns:\n    ResourceStatus with lifecycle_state and optional error message.\n\nRaises:\n    HTTPException: 404 if resource not found.",
+        "description": "Get resource lifecycle status.\n\nReturns only the lifecycle state, useful for polling without fetching full configuration.\n\nLifecycle states:\n    - draft: Stored but not submitted for processing\n    - pending: Validated and queued for provider\n    - processing: Provider is actively processing\n    - ready: Successfully provisioned and operational\n    - failed: Processing failed (check error field)\n\nReturns:\n    ResourceStatus with lifecycle_state and optional error message.\n\nRaises:\n    HTTPException: 404 if resource not found.",
         "operationId": "resources-get_resource_status",
         "parameters": [
           {
@@ -1039,7 +1039,7 @@
           "resources"
         ],
         "summary": "Apply Resource",
-        "description": "Apply resource with declarative lifecycle semantics for authenticated tenant.\n\nUsers set lifecycle_state directly in the resource:\n    - lifecycle_state=\"draft\": Store without processing (default)\n    - lifecycle_state=\"pending\": Validate deps, resolve refs, queue for processing\n\nCannot set: PROCESSING, READY, FAILED (system-only states)\nCannot modify resources in PENDING or PROCESSING state.\n\nAuthentication required. Resource applied within user's organization namespace.\n\nReturns:\n    Applied resource with timestamps and server-populated fields.\n\nRaises:\n    HTTPException: 409 if lifecycle transition invalid or resource in processing.\n        422 if dependency validation or field reference resolution fails.",
+        "description": "Apply a resource with declarative lifecycle semantics.\n\nSet lifecycle_state in the resource:\n    - lifecycle_state=\"draft\": Store without processing (default)\n    - lifecycle_state=\"pending\": Validate dependencies and queue for processing\n\nCannot set PROCESSING, READY, FAILED (system-only states).\nCannot modify resources in PENDING or PROCESSING state.\n\nReturns:\n    Applied resource with timestamps and server-populated fields.\n\nRaises:\n    HTTPException: 409 if lifecycle transition invalid or resource in processing.\n        422 if dependency validation or field reference resolution fails.",
         "operationId": "resources-apply_resource",
         "requestBody": {
           "content": {
@@ -1196,7 +1196,7 @@
           "failed_at"
         ],
         "title": "DeadLetterEventResponse",
-        "description": "User-facing dead letter event response.\n\nExcludes tenant_id since users are authenticated and scoped to their tenant.\n\nAttributes:\n    event_id: Original event ID from outbox or NATS.\n    provider: Provider name (e.g., \"postgres\").\n    resource_type: Resource type (e.g., \"database\").\n    resource_name: Resource name from manifest.\n    event_type: Type of lifecycle event (CREATE, UPDATE, DELETE).\n    payload: Resource configuration as JSON object.\n    error_message: Error message from last failed attempt.\n    attempt_count: Number of processing attempts before failure.\n    failed_at: When event was moved to dead letter."
+        "description": "Failed event response.\n\nAttributes:\n    event_id: Original event ID.\n    provider: Provider name (e.g., \"postgres\").\n    resource_type: Resource type (e.g., \"database\").\n    resource_name: Resource name from manifest.\n    event_type: Type of lifecycle event (CREATE, UPDATE, DELETE).\n    payload: Resource configuration as JSON object.\n    error_message: Error message from last failed attempt.\n    attempt_count: Number of processing attempts before failure.\n    failed_at: When event failed."
       },
       "DeployRequest": {
         "properties": {
@@ -1338,7 +1338,7 @@
           "created_at"
         ],
         "title": "OutboxEventResponse",
-        "description": "User-facing outbox event response.\n\nExcludes tenant_id since users are authenticated and scoped to their tenant.\n\nAttributes:\n    event_id: Unique identifier for this event.\n    provider: Provider name (e.g., \"postgres\").\n    resource_type: Resource type (e.g., \"database\").\n    resource_name: Resource name from manifest.\n    event_type: Type of lifecycle event (CREATE, UPDATE, DELETE).\n    payload: Resource configuration as JSON object.\n    previous_config: Previous configuration for UPDATE events.\n    correlation_id: Correlation ID for tracing across systems.\n    status: Publishing status (pending, published).\n    created_at: When event was created in outbox.\n    published_at: When event was published to NATS."
+        "description": "Event response.\n\nAttributes:\n    event_id: Unique identifier for this event.\n    provider: Provider name (e.g., \"postgres\").\n    resource_type: Resource type (e.g., \"database\").\n    resource_name: Resource name from manifest.\n    event_type: Type of lifecycle event (CREATE, UPDATE, DELETE).\n    payload: Resource configuration as JSON object.\n    previous_config: Previous configuration for UPDATE events.\n    correlation_id: Correlation ID for tracing.\n    status: Processing status (pending, published).\n    created_at: When event was created.\n    published_at: When event was processed."
       },
       "OutboxStatus": {
         "type": "string",
@@ -1347,7 +1347,7 @@
           "published"
         ],
         "title": "OutboxStatus",
-        "description": "Status of an outbox event.\n\nAttributes:\n    PENDING: Event created but not yet published to NATS.\n    PUBLISHED: Event successfully published to NATS."
+        "description": "Status of an event.\n\nAttributes:\n    PENDING: Event created but not yet processed.\n    PUBLISHED: Event successfully processed."
       },
       "OwnerReference": {
         "properties": {
