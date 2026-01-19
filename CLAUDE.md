@@ -1,3 +1,19 @@
+# CLAUDE.md
+
+## Project
+
+**pragma-docs**: Documentation for the Pragmatiks platform, hosted on [docs.pragmatiks.io](https://docs.pragmatiks.io).
+
+## Deployment
+
+Deployed via **Mintlify** - push to `main` auto-deploys.
+
+**Preview**: Mintlify provides preview URLs for PRs.
+
+**Config**: `docs.json` defines navigation, theme, and settings.
+
+---
+
 # Mintlify documentation
 
 ## CONFIDENTIAL - DO NOT PUBLISH
