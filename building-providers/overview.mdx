@@ -173,11 +173,25 @@ config:
 
 ## What's Next
 
+Follow this learning path to build and deploy your first provider:
+
 <CardGroup cols={2}>
-  <Card title="CLI Provider Commands" icon="terminal" href="/cli/providers">
-    Initialize, sync, and deploy providers.
+  <Card title="Getting Started" icon="rocket" href="/building-providers/getting-started">
+    Build a complete provider from scratch in 15 minutes.
   </Card>
-  <Card title="SDK Reference" icon="code" href="/sdk/overview">
-    Full SDK documentation.
+  <Card title="Config and Outputs" icon="sliders" href="/building-providers/config-outputs">
+    Design configuration schemas with validation and dependencies.
+  </Card>
+  <Card title="Lifecycle Methods" icon="rotate" href="/building-providers/lifecycle">
+    Implement on_create, on_update, and on_delete handlers.
+  </Card>
+  <Card title="Testing" icon="flask-vial" href="/building-providers/testing">
+    Test lifecycle methods with ProviderHarness.
+  </Card>
+  <Card title="Deployment" icon="cloud-arrow-up" href="/building-providers/deployment">
+    Build, push, and deploy your provider.
+  </Card>
+  <Card title="Best Practices" icon="lightbulb" href="/building-providers/best-practices">
+    Idempotency, error handling, and production patterns.
   </Card>
 </CardGroup>
