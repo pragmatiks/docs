@@ -46,28 +46,27 @@ Resources move through these states as pragma manages them:
 
 ```mermaid
 stateDiagram-v2
-    [*] --> DRAFT
-    DRAFT --> PENDING: apply --pending
-    PENDING --> PROVISIONING: provider starts
-    PROVISIONING --> READY: success
-    PROVISIONING --> FAILED: error
-    READY --> UPDATING: config change
-    UPDATING --> READY: success
-    UPDATING --> FAILED: error
-    FAILED --> PENDING: retry
-    READY --> DELETING: delete
-    DELETING --> [*]: removed
+    [*] --> draft
+    draft --> pending: apply --pending
+    pending --> processing: provider starts
+    processing --> ready: success
+    processing --> failed: error
+    ready --> pending: config change
+    failed --> pending: retry
+    ready --> pending: delete request
 ```
 
 | State | Description |
 |-------|-------------|
-| **DRAFT** | Created but not yet queued |
-| **PENDING** | Queued for provisioning |
-| **PROVISIONING** | Currently being created |
-| **READY** | Successfully provisioned and operational |
-| **UPDATING** | Configuration change in progress |
-| **DELETING** | Being removed |
-| **FAILED** | Provisioning or update failed |
+| `draft` | Created but not yet queued for processing |
+| `pending` | Queued for provider to handle (create, update, or delete) |
+| `processing` | Currently being handled by the provider |
+| `ready` | Successfully provisioned and operational |
+| `failed` | Processing failed, error recorded |
+
+<Note>
+Updates and deletes reuse the same state flow: the resource transitions from `ready` → `pending` → `processing` → `ready` (or `failed`).
+</Note>
 
 ## Dependencies
 

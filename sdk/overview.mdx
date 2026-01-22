@@ -291,57 +291,6 @@ client.delete_resource("gcp", "storage", "my-bucket")
 
 ---
 
-## Resource Type Registration
-
-### register_resource
-
-```python
-def register_resource(
-    provider: str,                        # Provider namespace
-    resource: str,                        # Resource type name
-    schema: dict[str, Any] | None = None, # JSON schema for validation
-    description: str | None = None,       # Human-readable description
-    tags: list[str] | None = None,        # Tags for categorization
-) -> ResourceDefinition
-```
-
-Register a new resource type. Required before creating instances of that type.
-
-```python
-definition = client.register_resource(
-    provider="mycompany",
-    resource="database",
-    description="PostgreSQL database instances",
-    schema={
-        "type": "object",
-        "properties": {
-            "name": {"type": "string"},
-            "size_gb": {"type": "integer", "minimum": 10},
-        },
-        "required": ["name"],
-    },
-    tags=["database", "postgres"],
-)
-print(definition.id)  # "resource_definition:mycompany_database"
-```
-
-### unregister_resource
-
-```python
-def unregister_resource(
-    provider: str,
-    resource: str,
-) -> None
-```
-
-Remove a resource type registration. Fails if instances exist.
-
-```python
-client.unregister_resource("mycompany", "database")
-```
-
----
-
 ## Dead Letter Operations
 
 Dead letter events are failed lifecycle events that can be retried or discarded.
@@ -512,27 +461,27 @@ tarball = buffer.getvalue()
 
 # Push and start build
 result = client.push_provider("my-provider", tarball)
-print(f"Build started: {result.job_name}")
+print(f"Build version: {result.version}")
 print(f"Status: {result.status}")  # BuildStatus.PENDING
 ```
 
-**Returns:** `PushResult` with `version`, `job_name`, `status`, and `message`.
+**Returns:** `PushResult` with `version`, `status`, and `message`.
 
 ### get_build_status
 
 ```python
 def get_build_status(
     provider_id: str,
-    job_name: str,
-) -> BuildResult
+    version: str,        # CalVer version (e.g., "20250115.120000")
+) -> BuildInfo
 ```
 
-Check the status of a build.
+Check the status of a build by version.
 
 ```python
 from pragma_sdk import BuildStatus
 
-result = client.get_build_status("my-provider", "build-job-123")
+result = client.get_build_status("my-provider", "20250115.120000")
 
 if result.status == BuildStatus.SUCCESS:
     print("Build successful!")
@@ -542,21 +491,21 @@ elif result.status == BuildStatus.BUILDING:
     print("Build in progress...")
 ```
 
-**Returns:** `BuildResult` with `job_name`, `status`, and `error_message` (on failure).
+**Returns:** `BuildInfo` with `provider_id`, `version`, `status`, `error_message` (on failure), and `created_at`.
 
 ### stream_build_logs
 
 ```python
 def stream_build_logs(
     provider_id: str,
-    job_name: str,
+    version: str,        # CalVer version (e.g., "20250115.120000")
 ) -> ContextManager[httpx.Response]
 ```
 
 Stream build logs in real-time.
 
 ```python
-with client.stream_build_logs("my-provider", "build-job-123") as response:
+with client.stream_build_logs("my-provider", "20250115.120000") as response:
     for line in response.iter_lines():
         print(line)
 ```
@@ -566,27 +515,31 @@ with client.stream_build_logs("my-provider", "build-job-123") as response:
 ```python
 def deploy_provider(
     provider_id: str,
-    version: str | None = None,  # CalVer version (e.g., 20250115.120000)
-) -> DeploymentResult
+    version: str | None = None,  # CalVer version (e.g., "20250115.120000")
+) -> ProviderStatus
 ```
 
 Deploy a provider to a specific version. If no version is specified, deploys the latest successful build.
 
 ```python
+from pragma_sdk import DeploymentStatus
+
 # Deploy latest version
 result = client.deploy_provider("my-provider")
-print(f"Deployment: {result.deployment_name}")
 print(f"Version: {result.version}")
 print(f"Status: {result.status}")  # DeploymentStatus.PROGRESSING
+print(f"Healthy: {result.healthy}")
 
 # Deploy specific version (useful for rollbacks)
 result = client.deploy_provider("my-provider", version="20250114.120000")
 ```
 
+**Returns:** `ProviderStatus` with `status`, `version`, `updated_at`, and `healthy`.
+
 ### get_deployment_status
 
 ```python
-def get_deployment_status(provider_id: str) -> DeploymentResult
+def get_deployment_status(provider_id: str) -> ProviderStatus
 ```
 
 Check deployment status.
@@ -597,12 +550,13 @@ from pragma_sdk import DeploymentStatus
 result = client.get_deployment_status("my-provider")
 
 if result.status == DeploymentStatus.AVAILABLE:
-    print(f"Ready: {result.ready_replicas} replicas")
+    print(f"Provider is healthy: {result.healthy}")
+    print(f"Version: {result.version}")
 elif result.status == DeploymentStatus.FAILED:
-    print(f"Failed: {result.message}")
+    print("Deployment failed")
 ```
 
-**Returns:** `DeploymentResult` with `deployment_name`, `status`, `available_replicas`, `ready_replicas`, `message`.
+**Returns:** `ProviderStatus` with `status`, `version`, `updated_at`, and `healthy`.
 
 ---
 
@@ -649,7 +603,7 @@ finally:
 ### Streaming Build Logs (Async)
 
 ```python
-async with client.stream_build_logs("my-provider", "build-job-123") as response:
+async with client.stream_build_logs("my-provider", "20250115.120000") as response:
     async for line in response.aiter_lines():
         print(line)
 ```

@@ -69,7 +69,7 @@ pragma providers deploy
 Deploy a specific version (useful for rollbacks):
 
 ```bash
-pragma providers deploy --version 20250114.120000
+pragma providers deploy mycompany 20250114.120000
 ```
 
 List available versions:
@@ -116,7 +116,7 @@ config:
 ```
 
 ```bash
-pragma resources apply -f test-resource.yaml
+pragma resources apply test-resource.yaml
 pragma resources get mycompany/database test-db
 ```
 

@@ -71,12 +71,17 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ## Resource Identifiers
 
-Resources are identified by `provider:resource:name`. When used in URLs, this must be URL-encoded:
+Resources are identified by a prefixed ID format: `resource:{provider}_{resource}_{name}`. When used in URLs, this must be URL-encoded:
 
 | Component | Example |
 |-----------|---------|
-| Unencoded | `postgres:database:my-db` |
-| URL-encoded | `postgres%3Adatabase%3Amy-db` |
+| Format | `resource:{provider}_{resource}_{name}` |
+| Unencoded | `resource:postgres_database_my-db` |
+| URL-encoded | `resource%3Apostgres_database_my-db` |
+
+<Note>
+The CLI and YAML files use a friendlier slash notation (`provider/resource/name`), which the API translates to the internal ID format.
+</Note>
 
 ## Lifecycle States
 
