@@ -1646,6 +1646,12 @@
             "title": "Schema",
             "default": {}
           },
+          "outputs_schema": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Outputs Schema",
+            "default": {}
+          },
           "description": {
             "anyOf": [
               {
