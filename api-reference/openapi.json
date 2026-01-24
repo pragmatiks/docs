@@ -761,7 +761,7 @@
           "resources"
         ],
         "summary": "List Resource Types",
-        "description": "List available resource types.\n\nReturns resource types that have been registered by deployed providers.\nUse this to discover what resource types are available to create.\n\nReturns:\n    List of resource types, ordered by provider and resource name.",
+        "description": "List available resource types.\n\nReturns resource types from both the shared namespace (platform resources\nlike pragma/secret) and the organization namespace (deployed providers).\n\nReturns:\n    List of resource types, ordered by provider and resource name.",
         "operationId": "resources-list_resource_types",
         "parameters": [
           {
