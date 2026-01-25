@@ -20,9 +20,12 @@ Official documentation for the pragma-os platform.
 | **Getting Started** | Prerequisites, quickstart, and setup verification |
 | **Concepts** | Core concepts: resources, providers, reactive dependencies |
 | **Guides** | Error recovery, migration guides |
+| **Troubleshooting** | Common issues and solutions |
 | **CLI Reference** | Command-line interface documentation |
 | **SDK Reference** | Python SDK for building providers |
+| **Resource Marketplace** | Provider catalog and resource overview |
 | **Building Providers** | Complete guide to creating custom providers |
+| **MCP** | Model Context Protocol server documentation |
 | **API Reference** | REST API documentation |
 
 ## Local Development
