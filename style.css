@@ -1,0 +1,37 @@
+/* Fix Mintlify bug: dark:text-primary-light uses wrong variable in dark mode */
+.dark {
+  --primary-light: 229 229 229;
+}
+
+/* ===== LIGHT MODE ONLY FIXES ===== */
+/* Cards - light mode only */
+:root:not(.dark) .card {
+  background-color: #F0F0F0 !important;
+}
+
+/* Code blocks - light mode only */
+:root:not(.dark) .code-block,
+:root:not(.dark) .code-block-background,
+:root:not(.dark) [class*="code-block-background"],
+:root:not(.dark) pre,
+:root:not(.dark) pre[class*="language-"],
+:root:not(.dark) .code-group {
+  background-color: #F0F0F0 !important;
+}
+
+/* Override Tailwind bg-white - light mode only */
+:root:not(.dark) .code-block [class*="bg-white"] {
+  background-color: #F0F0F0 !important;
+}
+
+/* Code block copy button gradient - light mode only */
+:root:not(.dark) .code-block > div {
+  background: linear-gradient(to right, transparent 0px, rgba(240, 240, 240, 0.2) 10px, rgba(240, 240, 240, 0.5) 25px, rgba(240, 240, 240, 0.8) 35px, #F0F0F0 45px) !important;
+}
+
+/* Reset the inner content div - light mode only */
+:root:not(.dark) .code-block > div[class*="w-0"],
+:root:not(.dark) .code-block > div[class*="min-w-full"] {
+  background: none !important;
+  background-color: #F0F0F0 !important;
+}

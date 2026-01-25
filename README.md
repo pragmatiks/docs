@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="assets/wordmark.png" alt="Pragma-OS" width="800">
+  <img src="assets/wordmark.png" alt="pragma-os" width="800">
 </p>
 
-# Pragma-OS Documentation
+# pragma-os Documentation
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/pragmatiks/pragma-docs)
 [![Docs](https://img.shields.io/badge/docs-online-brightgreen)](https://docs.pragmatiks.io)

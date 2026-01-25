@@ -1,0 +1,10 @@
+version: "3"
+
+tasks:
+  dev:
+    desc: Start local docs dev server
+    cmd: mise exec -- npx mintlify@latest dev --port 3200
+
+  build:
+    desc: Build docs for production
+    cmd: mise exec -- npx mintlify@latest build

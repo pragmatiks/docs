@@ -3,30 +3,32 @@
   "theme": "mint",
   "name": "Pragmatiks",
   "colors": {
-    "primary": "#1A1A1A",
-    "light": "#1A1A1A",
-    "dark": "#1A1A1A"
+    "primary": "#0D0D0D",
+    "light": "#0D0D0D",
+    "dark": "#E5E5E5"
   },
   "background": {
     "color": {
-      "light": "#F0F0F0",
+      "light": "#E5E5E5",
       "dark": "#0D0D0D"
     }
   },
   "styling": {
     "codeblocks": {
       "theme": {
-        "light": "github-light",
-        "dark": "vesper"
+        "light": "min-light",
+        "dark": "min-dark"
       }
     }
   },
   "fonts": {
     "heading": {
-      "family": "PP Supply Mono",
-      "source": "/fonts/PPSupplyMono-Regular.woff2",
-      "format": "woff2",
-      "weight": 400
+      "family": "Lekton",
+      "weight": 700
+    },
+    "body": {
+      "family": "Nunito Sans",
+      "weight": 300
     }
   },
   "favicon": "/favicon.svg",
@@ -79,7 +81,7 @@
         "tab": "Learn",
         "groups": [
           {
-            "group": "About pragma-os",
+            "group": "About",
             "pages": [
               "learn/index",
               "learn/how-we-compare"
@@ -192,12 +194,7 @@
         "label": "Support",
         "href": "mailto:support@pragmatiks.io"
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://pragmatiks.io"
-    }
+    ]
   },
   "contextual": {
     "options": [
