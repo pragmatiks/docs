@@ -23,7 +23,7 @@ Official documentation for the pragma-os platform.
 | **Troubleshooting** | Common issues and solutions |
 | **CLI Reference** | Command-line interface documentation |
 | **SDK Reference** | Python SDK for building providers |
-| **Resource Marketplace** | Provider catalog and resource overview |
+| **Resource Store** | Provider catalog and resource overview |
 | **Building Providers** | Complete guide to creating custom providers |
 | **MCP** | Model Context Protocol server documentation |
 | **API Reference** | REST API documentation |

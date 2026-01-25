@@ -46,8 +46,9 @@ Resources move through these states as pragma manages them:
 
 ```mermaid
 stateDiagram-v2
-    [*] --> draft
-    draft --> pending: apply --pending
+    [*] --> pending
+    [*] --> draft: apply --draft
+    draft --> pending: apply
     pending --> processing: provider starts
     processing --> ready: success
     processing --> failed: error
@@ -58,8 +59,8 @@ stateDiagram-v2
 
 | State | Description |
 |-------|-------------|
-| `draft` | Created but not yet queued for processing |
-| `pending` | Queued for provider to handle (create, update, or delete) |
+| `draft` | Created but not yet queued for processing (use `--draft` flag) |
+| `pending` | Queued for provider to handle (default behavior) |
 | `processing` | Currently being handled by the provider |
 | `ready` | Successfully provisioned and operational |
 | `failed` | Processing failed, error recorded |
@@ -96,16 +97,16 @@ When the dataset changes, pragma knows to update the table.
 
 ## Applying Resources
 
-Create resources in draft state:
+Create and provision resources immediately:
 
 ```bash
 pragma resources apply warehouse.yaml
 ```
 
-Queue for immediate provisioning:
+Create resources in draft state (skip provisioning):
 
 ```bash
-pragma resources apply --pending warehouse.yaml
+pragma resources apply --draft warehouse.yaml
 ```
 
 ## Next Steps

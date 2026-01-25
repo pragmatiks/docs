@@ -5,7 +5,7 @@ description: "Manage resources with the CLI"
 
 ## Apply
 
-Create or update resources from YAML:
+Create or update resources from YAML (starts provisioning immediately by default):
 
 ```bash
 pragma resources apply myresource.yaml
@@ -17,10 +17,10 @@ Apply multiple files:
 pragma resources apply file1.yaml file2.yaml
 ```
 
-Queue for immediate processing:
+Create in draft state (skip provisioning):
 
 ```bash
-pragma resources apply --pending myresource.yaml
+pragma resources apply --draft myresource.yaml
 ```
 
 ## List
@@ -87,6 +87,21 @@ Get detailed information about a resource, including full configuration and outp
 
 ```bash
 pragma resources describe gcp/storage my-bucket
+```
+
+## Tags
+
+Manage tags on existing resources:
+
+```bash
+# List tags
+pragma resources tags list gcp/storage my-bucket
+
+# Add tags
+pragma resources tags add gcp/storage my-bucket env:prod cost-center:123
+
+# Remove tags
+pragma resources tags remove gcp/storage my-bucket env:prod
 ```
 
 ## Delete

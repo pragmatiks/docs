@@ -694,6 +694,35 @@ match resource["lifecycle_state"]:
 
 ---
 
+## Dependencies
+
+When building providers, you can declare dependencies on other resources using the `Dependency[T]` generic. This provides typed access to the resolved dependency's outputs.
+
+```python
+from pragma_sdk import Resource, Config, Outputs, Dependency
+from my_provider.resources import Database
+
+class AppConfig(Config):
+    # dependency: declares a dependency on a Database resource
+    database: Dependency[Database]
+
+@mycloud.resource("app")
+class App(Resource[AppConfig, AppOutputs]):
+    async def on_create(self) -> AppOutputs:
+        # Access the resolved dependency
+        db = self.config.database
+        
+        # Access outputs (typed)
+        conn_url = db.outputs.connection_url
+        
+        # Access config
+        db_size = db.config.size_gb
+        
+        return AppOutputs(url=f"Connected to {conn_url}")
+```
+
+---
+
 ## Error Handling
 
 The SDK raises `httpx.HTTPStatusError` for API errors. Handle common cases:

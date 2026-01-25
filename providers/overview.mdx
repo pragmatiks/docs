@@ -1,9 +1,9 @@
 ---
-title: "Resource Marketplace"
+title: "Resource Store"
 description: "Browse and install pre-built infrastructure resources"
 ---
 
-The marketplace is where you find resources to install. Browse available resources like an app store, then install what you need with a single command.
+The store is where you find resources to install. Browse available resources like an app store, then install what you need with a single command.
 
 ## Provider Tiers
 
@@ -26,7 +26,50 @@ Google Cloud Platform infrastructure resources.
 | Resource | Description |
 |----------|-------------|
 | `gcp/storage` | Cloud Storage buckets |
-| `gcp/bigquery-dataset` | BigQuery datasets |
+| `gcp/gke` | GKE Autopilot clusters |
+| `gcp/secret` | Secret Manager secrets |
+
+### Anthropic Provider
+
+Claude AI model integration.
+
+| Resource | Description |
+|----------|-------------|
+| `anthropic/messages` | Claude Messages API for completions |
+
+### OpenAI Provider
+
+OpenAI model integration.
+
+| Resource | Description |
+|----------|-------------|
+| `openai/chat_completions` | Chat Completions API |
+| `openai/embeddings` | Text embeddings API |
+
+### Docling Provider
+
+Document parsing for RAG pipelines.
+
+| Resource | Description |
+|----------|-------------|
+| `docling/parser` | Parse PDF, DOCX, HTML, Markdown with OCR support |
+
+### Qdrant Provider
+
+Vector database for similarity search.
+
+| Resource | Description |
+|----------|-------------|
+| `qdrant/database` | Deploy Qdrant to GKE via Helm |
+| `qdrant/collection` | Manage vector collections |
+
+### Agno Provider
+
+AI agent deployment.
+
+| Resource | Description |
+|----------|-------------|
+| `agno/agent` | Deploy AI agents to GKE |
 
 ### Pragma Provider
 
@@ -34,11 +77,11 @@ Platform resources built into Pragmatiks.
 
 | Resource | Description |
 |----------|-------------|
-| `pragma/secret` | Secure credential storage |
+| `pragma/secret` | Secure credential storage (deprecated, use `gcp/secret`) |
 
 ## Browsing Resources
 
-The web marketplace is coming with the pragma-os dashboard. For now, browse resources via the CLI:
+The web store is coming with the pragma-os dashboard. For now, browse resources via the CLI:
 
 ```bash
 pragma providers list
