@@ -912,7 +912,7 @@
           "resources"
         ],
         "summary": "Get Resource",
-        "description": "Get resource by ID.\n\nReturns:\n    Resource with complete configuration and state.\n\nRaises:\n    HTTPException: 404 if resource not found.",
+        "description": "Get resource by ID.\n\nReturns:\n    Resource with complete configuration and state.",
         "operationId": "resources-get_resource",
         "parameters": [
           {
@@ -953,7 +953,7 @@
           "resources"
         ],
         "summary": "Delete Resource",
-        "description": "Delete a resource.\n\nTriggers the provider's deletion handler. The resource is set to PENDING state\nand will be removed when the provider confirms successful deletion.\n\nIdempotent: Returns 204 if resource doesn't exist (already deleted).\n\nReturns:\n    Resource in PENDING state awaiting provider deletion.\n\nRaises:\n    HTTPException: 204 if resource not found (already deleted).\n        409 if resource is currently being processed.",
+        "description": "Delete a resource.\n\nTriggers the provider's deletion handler. The resource is set to PENDING state\nand will be removed when the provider confirms successful deletion.\n\nIdempotent: Returns 204 if resource doesn't exist (already deleted).\n\nReturns:\n    Resource in PENDING state awaiting provider deletion.\n\nRaises:\n    HTTPException: 204 if resource already deleted.",
         "operationId": "resources-delete_resource",
         "parameters": [
           {
@@ -996,7 +996,7 @@
           "resources"
         ],
         "summary": "Get Resource Status",
-        "description": "Get resource lifecycle status.\n\nReturns only the lifecycle state, useful for polling without fetching full configuration.\n\nLifecycle states:\n    - draft: Stored but not submitted for processing\n    - pending: Validated and queued for provider\n    - processing: Provider is actively processing\n    - ready: Successfully provisioned and operational\n    - failed: Processing failed (check error field)\n\nReturns:\n    ResourceStatus with lifecycle_state and optional error message.\n\nRaises:\n    HTTPException: 404 if resource not found.",
+        "description": "Get resource lifecycle status.\n\nReturns only the lifecycle state, useful for polling without fetching full configuration.\n\nLifecycle states:\n    - draft: Stored but not submitted for processing\n    - pending: Validated and queued for provider\n    - processing: Provider is actively processing\n    - ready: Successfully provisioned and operational\n    - failed: Processing failed (check error field)\n\nReturns:\n    ResourceStatus with lifecycle_state and optional error message.",
         "operationId": "resources-get_resource_status",
         "parameters": [
           {
@@ -1039,7 +1039,7 @@
           "resources"
         ],
         "summary": "Apply Resource",
-        "description": "Apply a resource with declarative lifecycle semantics.\n\nSet lifecycle_state in the resource:\n    - lifecycle_state=\"draft\": Store without processing (default)\n    - lifecycle_state=\"pending\": Validate dependencies and queue for processing\n\nCannot set PROCESSING, READY, FAILED (system-only states).\nCannot modify resources in PENDING or PROCESSING state.\n\nReturns:\n    Applied resource with timestamps and server-populated fields.\n\nRaises:\n    HTTPException: 409 if lifecycle transition invalid or resource in processing.\n        422 if dependency validation or field reference resolution fails.",
+        "description": "Apply a resource with declarative lifecycle semantics.\n\nSet lifecycle_state in the resource:\n    - lifecycle_state=\"draft\": Store without processing (default)\n    - lifecycle_state=\"pending\": Validate dependencies and queue for processing\n\nCannot set PROCESSING, READY, FAILED (system-only states).\nCannot modify resources in PENDING or PROCESSING state.\n\nReturns:\n    Applied resource with timestamps and server-populated fields.",
         "operationId": "resources-apply_resource",
         "requestBody": {
           "content": {
@@ -1058,6 +1058,143 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Resource"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resources/{resource_id}/logs": {
+      "get": {
+        "tags": [
+          "resources"
+        ],
+        "summary": "Get Resource Logs",
+        "description": "Get logs for a resource.\n\nProxies log requests to the provider runtime that manages this resource.\n\nResponse modes:\n    - follow=false (default): Returns a JSON array of LogEntry objects\n    - follow=true: Returns an SSE stream of log events\n\nSSE format (when follow=true):\n    event: log\n    data: {\"timestamp\": \"...\", \"level\": \"info\", \"message\": \"...\"}\n\nReturns:\n    List of LogEntry objects (follow=false) or SSE StreamingResponse (follow=true).\n\nRaises:\n    HTTPException: 504 on provider timeout, 502 on provider error or connection failure.",
+        "operationId": "resources-get_resource_logs",
+        "parameters": [
+          {
+            "name": "resource_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Resource Id"
+            }
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Only return logs after this ISO timestamp",
+              "title": "Since"
+            },
+            "description": "Only return logs after this ISO timestamp"
+          },
+          {
+            "name": "tail",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 10000,
+              "minimum": 1,
+              "description": "Number of recent log entries to return",
+              "default": 100,
+              "title": "Tail"
+            },
+            "description": "Number of recent log entries to return"
+          },
+          {
+            "name": "follow",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "Stream logs in real-time via SSE",
+              "default": false,
+              "title": "Follow"
+            },
+            "description": "Stream logs in real-time via SSE"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Log entries (JSON array or SSE stream)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LogEntry"
+                  }
+                }
+              },
+              "text/event-stream": {
+                "description": "SSE stream of log events when follow=true"
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resources/{resource_id}/health": {
+      "get": {
+        "tags": [
+          "resources"
+        ],
+        "summary": "Get Resource Health",
+        "description": "Get health status of a resource.\n\nProxies the health check to the provider runtime that manages this resource.\nThe provider calls the resource's health() method and returns the result.\n\nReturns:\n    ResourceHealth with status (healthy, unhealthy, degraded) and optional details.\n\nRaises:\n    HTTPException: 404 if health check not available, 504 on timeout, 502 on provider error.",
+        "operationId": "resources-get_resource_health",
+        "parameters": [
+          {
+            "name": "resource_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Resource Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceHealth"
                 }
               }
             }
@@ -1685,6 +1822,43 @@
         ],
         "title": "ResourceDefinition",
         "description": "Domain model for resource definitions with provider/resource identity.\n\nResource definitions describe the schema and configuration for a resource type.\nProviders register resource definitions to declare what resources they can manage.\n\nIdentity fields (frozen - immutable after creation):\n    provider: Provider that manages this resource type.\n    resource: Resource type name.\n\nSchema fields (mutable):\n    schema: JSON schema defining the resource configuration structure.\n    description: Human-readable description of the resource type.\n\nCategorization fields (mutable):\n    tags: Optional list of tags for categorization and filtering.\n\nInherited from PragmaModel:\n    created_at: Creation timestamp (frozen).\n    updated_at: Last update timestamp (mutable)."
+      },
+      "ResourceHealth": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          },
+          "details": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Details"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "ResourceHealth",
+        "description": "Health status of a resource reported by its provider.\n\nAttributes:\n    status: Health state (healthy, unhealthy, degraded).\n    message: Optional human-readable description.\n    details: Optional provider-specific health check details."
       },
       "ResourceReference": {
         "properties": {
