@@ -103,13 +103,56 @@
         }
       }
     },
+    "/files/{name}/url": {
+      "get": {
+        "tags": [
+          "files"
+        ],
+        "summary": "Get Download Url",
+        "description": "Get a signed URL for file download.\n\nReturns a time-limited URL that can be used to download the file without\nauthentication. The URL expires after 15 minutes.\n\nReturns:\n    SignedUrlResponse with signed URL and expiration time.\n\nRaises:\n    HTTPException: 404 if file not found.",
+        "operationId": "files-get_download_url",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignedUrlResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/files/{name}/download": {
       "get": {
         "tags": [
           "files"
         ],
         "summary": "Download File",
-        "description": "Download file content.\n\nReturns:\n    File content with appropriate content-type header.\n\nRaises:\n    HTTPException: 404 if file not found.",
+        "description": "Download file content.\n\nSupports two authentication modes:\n- Bearer token: Standard authenticated request\n- Signed URL: Include token and expires query parameters\n\nReturns:\n    File content with appropriate content-type header.\n\nRaises:\n    HTTPException: 401 if authentication fails.\n    HTTPException: 404 if file not found.",
         "operationId": "files-download_file",
         "parameters": [
           {
@@ -119,6 +162,38 @@
             "schema": {
               "type": "string",
               "title": "Name"
+            }
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Token"
+            }
+          },
+          {
+            "name": "expires",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Expires"
             }
           }
         ],
@@ -2200,6 +2275,25 @@
         ],
         "title": "ResourceStatus",
         "description": "Resource lifecycle status response.\n\nAttributes:\n    resource_id: Unique resource identifier.\n    lifecycle_state: Current lifecycle state (draft, pending, processing, ready, failed).\n    error: Error message if resource is in failed state."
+      },
+      "SignedUrlResponse": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "expires_in": {
+            "type": "integer",
+            "title": "Expires In"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url",
+          "expires_in"
+        ],
+        "title": "SignedUrlResponse",
+        "description": "Response containing a signed download URL."
       },
       "UserInfo": {
         "properties": {
