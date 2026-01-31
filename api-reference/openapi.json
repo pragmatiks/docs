@@ -50,6 +50,225 @@
         }
       }
     },
+    "/files/{name}/upload": {
+      "post": {
+        "tags": [
+          "files"
+        ],
+        "summary": "Upload File",
+        "description": "Upload file content for a pragma/file resource.\n\nThe file is stored in GCS and can be referenced by a pragma/file resource.\nAfter uploading, apply the resource YAML to make it available:\n\n```yaml\nprovider: pragma\nresource: file\nname: my-file\nconfig:\n  content_type: application/pdf\nlifecycle_state: pending\n```\n\nReturns:\n    FileMetadata with URL, size, checksum, and upload timestamp.\n\nRaises:\n    HTTPException: 413 if file exceeds maximum size.",
+        "operationId": "files-upload_file",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_files-upload_file"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileMetadata"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/files/{name}/download": {
+      "get": {
+        "tags": [
+          "files"
+        ],
+        "summary": "Download File",
+        "description": "Download file content.\n\nReturns:\n    File content with appropriate content-type header.\n\nRaises:\n    HTTPException: 404 if file not found.",
+        "operationId": "files-download_file",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/files/{name}": {
+      "delete": {
+        "tags": [
+          "files"
+        ],
+        "summary": "Delete File",
+        "description": "Delete file content from storage.\n\nThis only deletes the file content. The pragma/file resource must be\ndeleted separately using the resources API.\n\nIdempotent: Returns 204 even if file doesn't exist.",
+        "operationId": "files-delete_file",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "files"
+        ],
+        "summary": "Check File Exists",
+        "description": "Check if file exists.\n\nReturns:\n    200 with metadata headers if exists, 404 if not.\n\nRaises:\n    HTTPException: 404 if file not found.",
+        "operationId": "files-check_file_exists",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/internal/files/{tenant_id}/{name}": {
+      "get": {
+        "tags": [
+          "internal"
+        ],
+        "summary": "Internal Download File",
+        "description": "Download file content for internal cluster use.\n\nThis endpoint is for provider access to files. It uses tenant_id from\nthe URL path instead of JWT authentication.\n\nOnly accessible from within the Kubernetes cluster - not exposed via\npublic ingress.\n\nArgs:\n    tenant_id: Tenant/organization ID owning the file.\n    name: File name.\n\nReturns:\n    File content with content-type from stored metadata.\n\nRaises:\n    HTTPException: 404 if file not found.",
+        "operationId": "internal-internal_download_file",
+        "parameters": [
+          {
+            "name": "tenant_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Tenant Id"
+            }
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/ops/dead-letter": {
       "get": {
         "tags": [
@@ -1215,6 +1434,20 @@
   },
   "components": {
     "schemas": {
+      "Body_files-upload_file": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_files-upload_file"
+      },
       "Body_providers-push_provider": {
         "properties": {
           "code": {
@@ -1373,6 +1606,46 @@
         ],
         "title": "EventType",
         "description": "Resource lifecycle event type: CREATE, UPDATE, or DELETE."
+      },
+      "FileMetadata": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "public_url": {
+            "type": "string",
+            "title": "Public Url"
+          },
+          "size": {
+            "type": "integer",
+            "title": "Size"
+          },
+          "content_type": {
+            "type": "string",
+            "title": "Content Type"
+          },
+          "checksum": {
+            "type": "string",
+            "title": "Checksum"
+          },
+          "uploaded_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Uploaded At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url",
+          "public_url",
+          "size",
+          "content_type",
+          "checksum",
+          "uploaded_at"
+        ],
+        "title": "FileMetadata",
+        "description": "Metadata for a stored file."
       },
       "HTTPValidationError": {
         "properties": {
